@@ -1,5 +1,6 @@
-from django.shortcuts import render,  get_list_or_404
+from django.shortcuts import render,  get_list_or_404, reverse
 from django.views import generic, View
+from django.http import HttpResponseRedirect
 from .models import Post
 from .forms import CommentForm
 
@@ -63,3 +64,15 @@ class PostDetails(View):
                 'comment_form': CommentForm()
             },
         )
+
+
+class PostLikes(View):
+    def post(self, request, slug):
+        post = get_list_or_404(Post, slug=slug)
+
+        if post[0].likes.filter(id=request.user.id).exists():
+            post[0].likes.remove(request.user)
+        else:
+            post[0].likes.add(request.user)
+
+        return HttpResponseRedirect(reverse('post_detail', args=[slug]))

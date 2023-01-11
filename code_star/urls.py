@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from blog.views import PostList, PostDetails
+from blog.views import PostList, PostDetails, PostLikes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('summernote/', include('django_summernote.urls')),
     path('', PostList.as_view(), name='home'),
     path('<slug:slug>', PostDetails.as_view(), name='post_detail'),
+    path('like/<slug:slug>', PostLikes.as_view(), name='post_like'),
     path('accounts/', include('allauth.urls')),
 ]
